@@ -10,7 +10,7 @@
 <body>
 	<h1>Bienvenido a mi sitio web</h1>
 	<?php
-		echo "Hola desde PHP a mi pagina de Ramon";
+		echo "Hola desde PHP a mi pagina de Tuesta";
 	?>
 </body>
 </html>
