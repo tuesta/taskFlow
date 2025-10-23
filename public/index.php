@@ -1,40 +1,24 @@
 <?php
-$tasks = [
-    ['title' => 'Revisar documentación de PHP', 'completed' => false, 'priority' => 'media'],
-    ['title' => 'Implementar bucle foreach', 'completed' => true, 'priority' => 'alta'],
-    ['title' => 'Aplicar estilos condicionales', 'completed' => false, 'priority' => 'baja'],
-    ['title' => 'Verificar funcionalidad', 'completed' => false, 'priority' => 'media'],
-    ['title' => 'Preparar entrega', 'completed' => true, 'priority' => 'alta'],
-];
-?>
 
-<?php include '../app/views/header.php'; ?>
+require_once('../app/funciones.php');
+
+// Datos de las tareas (simulando una base de datos)
+$tareas = [
+    ['titulo' => 'Configurar el entorno de desarrollo', 'completado' => true, 'prioridad' => 'alta'],
+    ['titulo' => 'Crear la estructura de carpetas', 'completado' => true, 'prioridad' => 'alta'],
+    ['titulo' => 'Diseñar la base de datos', 'completado' => false, 'prioridad' => 'media'],
+    ['titulo' => 'Implementar el sistema de login', 'completado' => false, 'prioridad' => 'alta'],
+    ['titulo' => 'Crear la vista de tareas', 'completado' => false, 'prioridad' => 'baja']
+];
+
+include '../app/views/header.php';
+?>
 
 <h2>Tareas Pendientes</h2>
 <ul>
-    <?php
-    foreach ($tasks as $task) {
-        $taskClasses = 'task-item';
-
-        if ($task['completed']) {
-            $taskClasses .= ' completed';
-        }
-
-        switch ($task['priority']) {
-            case 'alta':
-                $taskClasses .= ' priority-alta';
-                break;
-            case 'media':
-                $taskClasses .= ' priority-media';
-                break;
-            case 'baja':
-                $taskClasses .= ' priority-baja';
-                break;
-        }
-
-        echo '<li class="' . $taskClasses . '">' . $task['title'] . '</li>';
-    }
-    ?>
+    <?php foreach ($tareas as $tarea) {
+        echo renderizarTarea($tarea);
+    }?>
 </ul>
 
 <?php include '../app/views/footer.php'; ?>
