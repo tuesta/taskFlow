@@ -5,6 +5,7 @@ function obtenerClasePrioridad($prioridad) {
         'alta' => ' priority-alta',
         'media' => ' priority-media',
         'baja' => ' priority-baja',
+        default => '',
     };
 }
 
@@ -13,5 +14,5 @@ function renderizarTarea($tarea) {
         . ($tarea['completado'] ? ' completed' : '')
         . obtenerClasePrioridad($tarea['prioridad']);
 
-    return '<li class="'. $class . '">' . $tarea['titulo'] . '</li>';
+    return '<li class="'. htmlspecialchars($class) . '">' . htmlspecialchars($tarea['titulo']) . '</li>';
 }
