@@ -1,22 +1,57 @@
 <?php
+// public/index.php
 
-require_once('../app/funciones.php');
+require_once '../app/funciones.php';
+require_once '../app/data.php';
+require_once '../app/controllers/AuthController.php';
 
-// Datos de las tareas (simulando una base de datos)
-$tareas = [
-    ['titulo' => 'Configurar el entorno de desarrollo', 'completado' => true, 'prioridad' => 'alta'],
-    ['titulo' => 'Crear la estructura de carpetas', 'completado' => true, 'prioridad' => 'alta'],
-    ['titulo' => 'Diseñar la base de datos', 'completado' => false, 'prioridad' => 'media'],
-    ['titulo' => 'Implementar el sistema de login', 'completado' => false, 'prioridad' => 'alta'],
-    ['titulo' => 'Crear la vista de tareas', 'completado' => false, 'prioridad' => 'baja']
-];
+// 2. LÓGICA DEL ROUTER
+$accion = $_GET['accion'] ?? 'login';
 
-include '../app/views/header.php';
-?>
+// Switch para enrutar según la acción
+switch ($accion) {
+    case 'login':
+        // Lógica para procesar el envío del formulario de login
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
-<h2>Tareas Pendientes</h2>
-<ul>
-    <?php foreach ($tareas as $tarea) {echo renderizarTarea($tarea);}?>
-</ul>
+            if (handleLogin($email, $password, $usuarios_bbdd)) {
+                // POST-REDIRECT-GET
+                header('Location: index.php?accion=dashboard');
+                exit;
+            } else { $error = "Credenciales incorrectas.";}
+        }
 
-<?php include '../app/views/footer.php'; ?>
+        // Si no es POST o falló el login, mostrar la vista
+        include '../app/views/login.view.php';
+        break;
+
+    case 'dashboard':
+        // PROTECCIÓN DE RUTA
+        if (!checkAuth()) {
+            header('Location: index.php?accion=login');
+            exit;
+        }
+
+        // Si estamos autenticados, preparamos los datos para la vista
+        $tareas = [
+            ['titulo' => 'Implementar Login', 'completado' => true, 'prioridad' => 'alta'],
+            ['titulo' => 'Añadir Pruebas Unitarias', 'completado' => false, 'prioridad' => 'media']
+        ];
+
+        // Cargar la vista del dashboard
+        include '../app/views/tareas.view.php';
+        break;
+
+    case 'logout':
+        // Cierra sesión y redirige
+        handleLogout();
+        break;
+
+    default:
+        // Manejo de error 404
+        http_response_code(404);
+        echo "Error 404: Página no encontrada.";
+        break;
+}
